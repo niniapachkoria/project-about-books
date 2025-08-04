@@ -6,19 +6,19 @@ app = Flask(__name__)
 
 DATA_FILE = "books.json"
 
-# წიგნების ჩატვირთვა ფაილიდან
+
 def load_books():
     if not os.path.exists(DATA_FILE):
         return []
     with open(DATA_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 
-# წიგნების შენახვა ფაილში
+
 def save_books(books):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(books, f, ensure_ascii=False, indent=4)
 
-# მთავარი გვერდი
+
 @app.route("/")
 def home():
     return """
@@ -26,7 +26,7 @@ def home():
     <p>ეს საიტი გაძლევთ საშუალებას დაამატოთ, წაშალოთ, ნახოთ და რედაქტიროთ წიგნები JSON ფაილში.</p>
     """
 
-# ყველა წიგნის სია
+
 @app.route("/books", methods=["GET"])
 def all_books():
     books = load_books()
@@ -34,7 +34,7 @@ def all_books():
         return jsonify({"message": "წიგნები არ მოიძებნა."}), 404
     return jsonify(books)
 
-# კონკრეტული წიგნის დეტალები
+
 @app.route("/details/<int:book_id>", methods=["GET"])
 def detailed_book(book_id):
     books = load_books()
@@ -43,7 +43,7 @@ def detailed_book(book_id):
             return jsonify(book)
     return jsonify({"error": "წიგნი ვერ მოიძებნა."}), 404
 
-# ახალი წიგნის დამატება
+
 @app.route("/add_book", methods=["POST"])
 def add_book():
     data = request.get_json()
@@ -68,7 +68,7 @@ def add_book():
         "message": "წიგნი წარმატებით დაემატა!"
     }), 201
 
-# არსებული წიგნის რედაქტირება
+
 @app.route("/edit_book/<int:book_id>", methods=["PUT"])
 def edit_book(book_id):
     books = load_books()
@@ -89,7 +89,7 @@ def edit_book(book_id):
 
     return jsonify({"error": "წიგნი ვერ მოიძებნა."}), 404
 
-# წიგნის წაშლა
+
 @app.route("/delete/<int:book_id>", methods=["DELETE"])
 def delete_book(book_id):
     books = load_books()
@@ -100,6 +100,7 @@ def delete_book(book_id):
             return jsonify({"message": "წიგნი წარმატებით წაიშალა."}), 200
     return jsonify({"error": "წიგნი ვერ მოიძებნა."}), 404
 
-# სერვერის გაშვება
+
 if __name__ == "__main__":
     app.run(debug=True)
+
